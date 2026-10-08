@@ -1,0 +1,30 @@
+name: Council GPT live (manual gated)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: hive-council-live-gpt
+  cancel-in-progress: false
+
+jobs:
+  live-gpt:
+    if: ${{ vars.COUNCIL_LIVE_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    environment: council-live
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Run exactly one GPT response
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
+          COUNCIL_LIVE_APPROVED: "YES"
+        run: python3 council_poll.py --repo BillyMixNix/hive-council --agent gpt --issue 3 --post --live --max-replies 1 --max-tokens 256 --max-chars 2500
