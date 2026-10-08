@@ -109,7 +109,7 @@ def run(args):
         raise ValueError("Live calls require COUNCIL_LIVE_APPROVED=YES")
     all_comments = comments(args.repo, args.issue)
     parsed = [(c, metadata(c.get("body", ""))) for c in all_comments]
-    addressed = [(c, m) for c, m in parsed if m.get("to", "").lower() == args.agent
+    addressed = [(c, m) for c, m in parsed if m.get("to", "").lower() in (args.agent, "all")
                  and m.get("id") and m.get("from", "").lower() != args.agent]
     if not addressed:
         print("No addressed messages")
