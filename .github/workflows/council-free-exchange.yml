@@ -1,0 +1,27 @@
+name: Council free two-agent experiment
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  models: read
+
+concurrency:
+  group: hive-council-free-exchange
+  cancel-in-progress: false
+
+jobs:
+  free-exchange:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Two real free-tier inference calls (fail closed)
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          COUNCIL_FREE_ONLY: "YES"
+        run: python3 free_council_exchange.py
