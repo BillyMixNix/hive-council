@@ -2,6 +2,8 @@ name: Council free two-agent experiment
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
 
 permissions:
   contents: read
